@@ -8,12 +8,15 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <argp.h>
 
-#include "options.h"
+#include "utils.h"
 #include "argparser.h"
+#include "ftpclient.h"
 
-int main (int argc, char **argv) {
+
+void main (int argc, char **argv) {
   struct arguments arguments;
   
   /* Default values. */
@@ -36,10 +39,37 @@ int main (int argc, char **argv) {
   
   if (!arguments.file || !arguments.hostname) {
     if (!arguments.swarmIsOn) {
-      printf("--file and --server are required.\n");
-      exit(100);
+      fprintf(stderr, "Either --file and --server or --swarm is required.\n");
+      exit(GENERIC_ERROR);
     }
   }
   
+  FILE *localFile = fopen(arguments->file, "w");
+  FILE *logFile = NULL;
+  FILE *configFile = NULL;
+  
+  if (arguments->logIsOn) {
+    if (strcmp(arguments->logFile, "-")) {
+      logFile = stdout;
+    }
+    else {
+      logFile = fopen(arguments->logFile, "W");
+    }
+  }
+  
+  if (arguments->swarmIsOn) {
+    configFile = fopen(arguments->swarm_config_file, "r");
+    if (configFile == NULL) {
+      fprintf(stderr, "File(%s) does not exist.\n", arguments->swarm_config_file);
+      exit(GENERIC_ERROR);
+    }
+  }
+  
+  createSocket(arguments.hostname, arguments.port);
+  
+  fclose(logFile);
+  fclose(logFile);
+  fclose(configFile);
   exit (0);
 }
+

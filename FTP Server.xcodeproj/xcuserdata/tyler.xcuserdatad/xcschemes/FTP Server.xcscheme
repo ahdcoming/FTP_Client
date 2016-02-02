@@ -61,6 +61,12 @@
             ReferencedContainer = "container:FTP Server.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "-a -f file -s ftp.ucsb.edu -p 22 -n user -P password -m ASCII -l logfile -w config -b 20"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

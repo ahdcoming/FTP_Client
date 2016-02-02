@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "argparser.h"
-#include "options.h"
+#include "utils.h"
 
 /* Parse a single option. */
 error_t parse_opt (int key, char *arg, struct argp_state *state) {
@@ -38,6 +38,10 @@ error_t parse_opt (int key, char *arg, struct argp_state *state) {
       break;
     case 'p':
       arguments->port = atoi(arg);
+      if (arguments->port > 65536) {
+        fprintf(stderr, "Invalid port number.\n");
+        exit(GENERIC_ERROR);
+      }
       break;
     case 'n':
       arguments->user = arg;
@@ -53,7 +57,8 @@ error_t parse_opt (int key, char *arg, struct argp_state *state) {
         arguments->mode = MODE_BINARY;
       }
       else {
-        argp_usage(state);
+        fprintf(stderr, "Invalid mode. Should be either `ASCII` or `binary`.\n");
+        exit(GENERIC_ERROR);
       }
       break;
     case 'b':

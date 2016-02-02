@@ -3,15 +3,36 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 47;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		2F1B6C4E1C5DEBA5000EACBE /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 2F1B6C4D1C5DEBA5000EACBE /* main.c */; };
+		2FD5ECCF1C5E056A001DA59E /* libargp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FD5ECCE1C5E056A001DA59E /* libargp.a */; };
+		2FD5ECD51C5EEAFA001DA59E /* argparser.c in Sources */ = {isa = PBXBuildFile; fileRef = 2FD5ECD31C5EEAFA001DA59E /* argparser.c */; };
+		2FD5ECD81C5F3C6E001DA59E /* ftpclient.c in Sources */ = {isa = PBXBuildFile; fileRef = 2FD5ECD61C5F3C6E001DA59E /* ftpclient.c */; };
+		2FD5ECE41C5F4B5D001DA59E /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2FD5ECE31C5F4B5D001DA59E /* main.cpp */; };
+		2FD5ECE81C5F4B80001DA59E /* gmock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FD5ECD91C5F4B44001DA59E /* gmock.framework */; };
+		2FD5ECE91C5F4B83001DA59E /* gtest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FD5ECDA1C5F4B44001DA59E /* gtest.framework */; };
+		2FD5ECEA1C5F4B87001DA59E /* libargp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FD5ECCE1C5E056A001DA59E /* libargp.a */; };
+		2FD5ECEB1C5F4BBF001DA59E /* argparser.c in Sources */ = {isa = PBXBuildFile; fileRef = 2FD5ECD31C5EEAFA001DA59E /* argparser.c */; };
+		2FD5ECED1C5F4BC7001DA59E /* ftpclient.c in Sources */ = {isa = PBXBuildFile; fileRef = 2FD5ECD61C5F3C6E001DA59E /* ftpclient.c */; };
+		2FD5ECEF1C5F4BE9001DA59E /* ftpclientTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2FD5ECEE1C5F4BE8001DA59E /* ftpclientTests.cpp */; };
+		2FD5ECF21C5FD320001DA59E /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 2FD5ECF01C5FD320001DA59E /* utils.c */; };
+		2FD5ECF31C5FD320001DA59E /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 2FD5ECF01C5FD320001DA59E /* utils.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		2F1B6C481C5DEBA4000EACBE /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		2FD5ECDF1C5F4B5D001DA59E /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -25,6 +46,19 @@
 /* Begin PBXFileReference section */
 		2F1B6C4A1C5DEBA5000EACBE /* FTP Server */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "FTP Server"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F1B6C4D1C5DEBA5000EACBE /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		2FD5ECCE1C5E056A001DA59E /* libargp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libargp.a; path = "../../../../../../usr/local/Cellar/argp-standalone/1.3/lib/libargp.a"; sourceTree = "<group>"; };
+		2FD5ECD01C5E0961001DA59E /* makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = makefile; sourceTree = "<group>"; };
+		2FD5ECD31C5EEAFA001DA59E /* argparser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = argparser.c; sourceTree = "<group>"; };
+		2FD5ECD41C5EEAFA001DA59E /* argparser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = argparser.h; sourceTree = "<group>"; };
+		2FD5ECD61C5F3C6E001DA59E /* ftpclient.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ftpclient.c; sourceTree = "<group>"; };
+		2FD5ECD71C5F3C6E001DA59E /* ftpclient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ftpclient.h; sourceTree = "<group>"; };
+		2FD5ECD91C5F4B44001DA59E /* gmock.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = gmock.framework; path = ../../../../../../usr/local/Frameworks/gmock.framework; sourceTree = "<group>"; };
+		2FD5ECDA1C5F4B44001DA59E /* gtest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = gtest.framework; path = ../../../../../../usr/local/Frameworks/gtest.framework; sourceTree = "<group>"; };
+		2FD5ECE11C5F4B5D001DA59E /* Tests */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Tests; sourceTree = BUILT_PRODUCTS_DIR; };
+		2FD5ECE31C5F4B5D001DA59E /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		2FD5ECEE1C5F4BE8001DA59E /* ftpclientTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ftpclientTests.cpp; sourceTree = "<group>"; };
+		2FD5ECF01C5FD320001DA59E /* utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = utils.c; sourceTree = "<group>"; };
+		2FD5ECF11C5FD320001DA59E /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +66,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FD5ECCF1C5E056A001DA59E /* libargp.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2FD5ECDE1C5F4B5D001DA59E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2FD5ECE91C5F4B83001DA59E /* gtest.framework in Frameworks */,
+				2FD5ECE81C5F4B80001DA59E /* gmock.framework in Frameworks */,
+				2FD5ECEA1C5F4B87001DA59E /* libargp.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,7 +86,11 @@
 		2F1B6C411C5DEBA4000EACBE = {
 			isa = PBXGroup;
 			children = (
+				2FD5ECD91C5F4B44001DA59E /* gmock.framework */,
+				2FD5ECDA1C5F4B44001DA59E /* gtest.framework */,
+				2FD5ECCE1C5E056A001DA59E /* libargp.a */,
 				2F1B6C4C1C5DEBA5000EACBE /* FTP Server */,
+				2FD5ECE21C5F4B5D001DA59E /* Tests */,
 				2F1B6C4B1C5DEBA5000EACBE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -50,6 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				2F1B6C4A1C5DEBA5000EACBE /* FTP Server */,
+				2FD5ECE11C5F4B5D001DA59E /* Tests */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -57,9 +107,25 @@
 		2F1B6C4C1C5DEBA5000EACBE /* FTP Server */ = {
 			isa = PBXGroup;
 			children = (
+				2FD5ECD41C5EEAFA001DA59E /* argparser.h */,
+				2FD5ECD31C5EEAFA001DA59E /* argparser.c */,
 				2F1B6C4D1C5DEBA5000EACBE /* main.c */,
+				2FD5ECD71C5F3C6E001DA59E /* ftpclient.h */,
+				2FD5ECD61C5F3C6E001DA59E /* ftpclient.c */,
+				2FD5ECF11C5FD320001DA59E /* utils.h */,
+				2FD5ECF01C5FD320001DA59E /* utils.c */,
+				2FD5ECD01C5E0961001DA59E /* makefile */,
 			);
 			path = "FTP Server";
+			sourceTree = "<group>";
+		};
+		2FD5ECE21C5F4B5D001DA59E /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				2FD5ECE31C5F4B5D001DA59E /* main.cpp */,
+				2FD5ECEE1C5F4BE8001DA59E /* ftpclientTests.cpp */,
+			);
+			path = Tests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -82,6 +148,23 @@
 			productReference = 2F1B6C4A1C5DEBA5000EACBE /* FTP Server */;
 			productType = "com.apple.product-type.tool";
 		};
+		2FD5ECE01C5F4B5D001DA59E /* Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2FD5ECE51C5F4B5D001DA59E /* Build configuration list for PBXNativeTarget "Tests" */;
+			buildPhases = (
+				2FD5ECDD1C5F4B5D001DA59E /* Sources */,
+				2FD5ECDE1C5F4B5D001DA59E /* Frameworks */,
+				2FD5ECDF1C5F4B5D001DA59E /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Tests;
+			productName = Tests;
+			productReference = 2FD5ECE11C5F4B5D001DA59E /* Tests */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -94,10 +177,13 @@
 					2F1B6C491C5DEBA4000EACBE = {
 						CreatedOnToolsVersion = 7.2;
 					};
+					2FD5ECE01C5F4B5D001DA59E = {
+						CreatedOnToolsVersion = 7.2;
+					};
 				};
 			};
 			buildConfigurationList = 2F1B6C451C5DEBA4000EACBE /* Build configuration list for PBXProject "FTP Server" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 6.3";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -109,6 +195,7 @@
 			projectRoot = "";
 			targets = (
 				2F1B6C491C5DEBA4000EACBE /* FTP Server */,
+				2FD5ECE01C5F4B5D001DA59E /* Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -118,7 +205,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FD5ECD51C5EEAFA001DA59E /* argparser.c in Sources */,
+				2FD5ECF21C5FD320001DA59E /* utils.c in Sources */,
 				2F1B6C4E1C5DEBA5000EACBE /* main.c in Sources */,
+				2FD5ECD81C5F3C6E001DA59E /* ftpclient.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2FD5ECDD1C5F4B5D001DA59E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2FD5ECF31C5FD320001DA59E /* utils.c in Sources */,
+				2FD5ECE41C5F4B5D001DA59E /* main.cpp in Sources */,
+				2FD5ECEF1C5F4BE9001DA59E /* ftpclientTests.cpp in Sources */,
+				2FD5ECEB1C5F4BBF001DA59E /* argparser.c in Sources */,
+				2FD5ECED1C5F4BC7001DA59E /* ftpclient.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,6 +309,12 @@
 		2F1B6C521C5DEBA5000EACBE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Frameworks,
+				);
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = "/usr/local/Cellar/argp-standalone/1.3/lib";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -214,6 +322,44 @@
 		2F1B6C531C5DEBA5000EACBE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Frameworks,
+				);
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = "/usr/local/Cellar/argp-standalone/1.3/lib";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		2FD5ECE61C5F4B5D001DA59E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Frameworks,
+				);
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/usr/local/Cellar/argp-standalone/1.3/lib",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2FD5ECE71C5F4B5D001DA59E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Frameworks,
+				);
+				HEADER_SEARCH_PATHS = /usr/local/include;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/usr/local/Cellar/argp-standalone/1.3/lib",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -235,6 +381,15 @@
 			buildConfigurations = (
 				2F1B6C521C5DEBA5000EACBE /* Debug */,
 				2F1B6C531C5DEBA5000EACBE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2FD5ECE51C5F4B5D001DA59E /* Build configuration list for PBXNativeTarget "Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2FD5ECE61C5F4B5D001DA59E /* Debug */,
+				2FD5ECE71C5F4B5D001DA59E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};

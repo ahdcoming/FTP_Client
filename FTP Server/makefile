@@ -15,6 +15,9 @@ main.o: main.c options.h argparser.h
 argparser.o: argparser.c options.h argparser.h
 	gcc $(CFLAGS) argparser.c
 
+ftpclient.o: ftpclient.c options.h ftpclient.h
+	gcc $(CFLAGS) ftpclient.c
+
 clean:
 	rm mftp *.o
 
