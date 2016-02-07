@@ -129,7 +129,7 @@ namespace {
     EXPECT_EQ(0, ftpSendDownloadSignal(&client));
   }
   
-  TEST_F(FTPClientTest, ftpReveiveData__passive_ascii_Mode) {
+  TEST_F(FTPClientTest, ftpReceiveData__passive_ascii_Mode) {
     ftpConnect(&client);
     ftpLogin(&client);
     client.isActive = 0;
@@ -137,10 +137,10 @@ namespace {
     client.mode = MODE_ASCII;
     ftpSetMode(&client);
     ftpSendDownloadSignal(&client);
-    EXPECT_EQ(0, ftpReveiveData(&client));
+    EXPECT_EQ(0, ftpReceiveData(&client));
   }
   
-  TEST_F(FTPClientTest, ftpReveiveData__active_ascii_Mode) {
+  TEST_F(FTPClientTest, ftpReceiveData__active_ascii_Mode) {
     ftpConnect(&client);
     ftpLogin(&client);
     client.isActive = 1;
@@ -148,10 +148,10 @@ namespace {
     client.mode = MODE_ASCII;
     ftpSetMode(&client);
     ftpSendDownloadSignal(&client);
-    EXPECT_EQ(0, ftpReveiveData(&client));
+    EXPECT_EQ(0, ftpReceiveData(&client));
   }
   
-  TEST_F(FTPClientTest, ftpReveiveData__passive_binary_Mode) {
+  TEST_F(FTPClientTest, ftpReceiveData__passive_binary_Mode) {
     ftpConnect(&client);
     ftpLogin(&client);
     client.isActive = 0;
@@ -159,10 +159,10 @@ namespace {
     client.mode = MODE_BINARY;
     ftpSetMode(&client);
     ftpSendDownloadSignal(&client);
-    EXPECT_EQ(0, ftpReveiveData(&client));
+    EXPECT_EQ(0, ftpReceiveData(&client));
   }
   
-  TEST_F(FTPClientTest, ftpReveiveData__active_binary_Mode) {
+  TEST_F(FTPClientTest, ftpReceiveData__active_binary_Mode) {
     ftpConnect(&client);
     ftpLogin(&client);
     client.isActive = 1;
@@ -170,6 +170,6 @@ namespace {
     client.mode = MODE_BINARY;
     ftpSetMode(&client);
     ftpSendDownloadSignal(&client);
-    EXPECT_EQ(0, ftpReveiveData(&client));
+    EXPECT_EQ(0, ftpReceiveData(&client));
   }
 }  // namespace

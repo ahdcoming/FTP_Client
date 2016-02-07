@@ -14,7 +14,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 
-//#include <unistd.h>
+#include <unistd.h>
 
 #include "ftpclient.h"
 #include "utils.h"
@@ -27,7 +27,8 @@ int ftpDownloadFile(ftp_client *client) {
   ftpSetBehaviour(client);
   ftpSetMode(client);
   ftpSendDownloadSignal(client);
-  ftpReveiveData(client);
+  ftpReceiveData(client);
+  ftpConfirmCompletion(client);
   return 0;
 }
 
@@ -187,33 +188,40 @@ int ftpSetBehaviour(ftp_client *client) {
 }
 
 int ftpSendDownloadSignal(ftp_client *client) {
-  fprintf(client->socket, "%s %s\r\n", FTP_RETR, client->fileName);
-  
-  if (client->isActive) {
-    fflush(client->socket);
-    client->dataSocketFD = acceptConnection(client->listenSockFD);
-  }
-  client->dataSocket = fdopen(client->dataSocketFD, "r");
-  
+  fprintf(client->socket, "%s %s\r\n", FTP_RETR, client->filePath);
   fgets(buffer, sizeof(buffer), client->socket);
   if (strncmp(buffer, RES_START, 3) != 0
       && strncmp(buffer, RES_ABOUT_TO_OPEN, 3) != 0) {
     handleFTPError(buffer);
   }
+  
+  if (client->isActive) {
+    client->dataSocketFD = acceptConnection(client->listenSockFD);
+  }
+  client->dataSocket = fdopen(client->dataSocketFD, "r");
   return 0;
 }
 
-int ftpReveiveData(ftp_client *client) {
-  bzero(buffer, sizeof(buffer));
+int ftpReceiveData(ftp_client *client) {
+  char data[BUFFER_SIZE] = {0};
   unsigned long int readSize = 0;
+  FILE *localFile = fopen(client->localFilePath, "w");
   do {
-    readSize = fread(buffer, 1, sizeof(buffer), client->dataSocket);
-    fwrite(buffer, 1, readSize, client->localFile);
+    readSize = fread(data, 1, sizeof(data), client->dataSocket);
+    fwrite(data, 1, readSize, localFile);
   } while(readSize > 0);
+  close(client->dataSocketFD);
+  if (client->listenSockFD > 0) close(client->listenSockFD);
+  fclose(localFile);
   return 0;
 }
 
-int confirmClosing() {
-
+int ftpConfirmCompletion(ftp_client *client) {
+  fgets(buffer, sizeof(buffer), client->socket);
+  if (strncmp(buffer, RES_CLOSING_DATA_CONNECTION, 3) != 0
+      && strncmp(buffer, RES_COMPLETED, 3) != 0) {
+    handleFTPError(buffer);
+  }
+  close(client->socketFD);
   return 0;
 }

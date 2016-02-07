@@ -44,10 +44,9 @@ int main (int argc, char **argv) {
       exit(GENERIC_ERROR);
     }
   }
-  char localFilenamem[100] = "./";
-  strcat(localFilenamem, basename(arguments.file));
+  char localFilePath[100] = "./";
+  strcat(localFilePath, basename(arguments.file));
   
-  FILE *localFile = fopen(localFilenamem, "w");
   FILE *logFile = NULL;
   FILE *configFile = NULL;
   
@@ -72,14 +71,13 @@ int main (int argc, char **argv) {
   ftpClient.hostname = arguments.hostname;
   ftpClient.user = arguments.user;
   ftpClient.password = arguments.password;
-  ftpClient.fileName = arguments.file;
-  ftpClient.localFile = localFile;
+  ftpClient.filePath = arguments.file;
+  ftpClient.localFilePath = localFilePath;
   ftpClient.isActive = arguments.isActive;
   ftpClient.mode = arguments.mode;
   ftpClient.port = arguments.port;
   ftpDownloadFile(&ftpClient);
   
-  fclose(localFile);
   fclose(logFile);
   fclose(configFile);
   exit (0);

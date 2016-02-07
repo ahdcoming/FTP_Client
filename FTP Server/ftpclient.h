@@ -36,8 +36,10 @@ static const char RES_ABOUT_TO_OPEN[] = "150 ";
 static const char RES_OKAY[] = "200 ";
 static const char RES_NOT_IMPLEMENTED1[] = "202 ";
 static const char RES_SERVICE_READY[] = "220 ";
+static const char RES_CLOSING_DATA_CONNECTION[] = "226 ";
 static const char RES_PASV[] = "227 ";
 static const char RES_LOGGED_IN[] = "230 ";
+static const char RES_COMPLETED[] = "250 ";
 
 static const char RES_PASSWORD_REQ[] = "331 ";
 
@@ -60,12 +62,12 @@ typedef struct {
   FILE *dataSocket;
   int listenSockFD;
 
-  FILE *localFile;
+  char *localFilePath;
     
   char *hostname;
   char *user;
   char *password;
-  char *fileName;
+  char *filePath;
   
   int isActive;
   int mode;
@@ -80,6 +82,7 @@ int ftpLogin(ftp_client *client);
 int ftpSetMode(ftp_client *client);
 int ftpSetBehaviour(ftp_client *client);
 int ftpSendDownloadSignal(ftp_client *client);
-int ftpReveiveData(ftp_client *client);
+int ftpReceiveData(ftp_client *client);
+int ftpConfirmCompletion(ftp_client *client);
 
 #endif /* ftpclient_h */
