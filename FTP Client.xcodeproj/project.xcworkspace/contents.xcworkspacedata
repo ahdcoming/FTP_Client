@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:FTP Server.xcodeproj">
+      location = "self:/Users/tyler/Developer/CS176B/hw2/FTP Server/FTP Client.xcodeproj">
    </FileRef>
 </Workspace>

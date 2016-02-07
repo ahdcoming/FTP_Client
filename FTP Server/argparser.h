@@ -44,7 +44,7 @@ struct arguments {
   char *swarm_config_file;
   unsigned int port;
   unsigned int mode;
-  unsigned int isAvtive;
+  unsigned int isActive;
   unsigned int logIsOn;
   unsigned int swarmIsOn;
   unsigned int num_bytes;

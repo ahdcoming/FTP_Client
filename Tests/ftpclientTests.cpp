@@ -28,16 +28,26 @@ namespace {
   class FTPClientTest : public ::testing::Test {
   protected:
     ftp_client client;
-    
+    char user[40] = "anonymous";
+    char passwrod[40] = "user@localhost.localnet";
+    char hostname[40] = "ftp.ucsb.edu";
+    char filename[90] = "/robots.txt";
+    char localFilenamem[100] = "./";
+
     FTPClientTest() {
-      char user[] = "anonymous";
-      char passwrod[] = " ";
       client.user = user;
       client.password = passwrod;
+      client.hostname = hostname;
+      client.fileName = filename;
+      strcat(localFilenamem, filename);
+      client.localFile = fopen(localFilenamem, "w");
+      client.port = 21;
     }
     
     virtual ~FTPClientTest() {
       close(client.socketFD);
+      close(client.dataSocketFD);
+      fclose(client.localFile);
     }
     
     // If the constructor and destructor are not enough for setting up
@@ -49,44 +59,117 @@ namespace {
     }
     
     virtual void TearDown() {
-      // Code here will be called immediately after each test (right
-      // before the destructor).
     }
     
     // Objects declared here can be used by all tests in the test case for Foo.
   };
   
   TEST_F(FTPClientTest, createSocket__givenDomainName__returnsSocketFD) {
-    int result = createSocket("ftp.ucsb.edu", 21);
+    int result = connectToServer("ftp.ucsb.edu", 21);
     EXPECT_NE(-1, result);
   }
   
   TEST_F(FTPClientTest, createSocket__givenIPAddr__returnsSocketFD) {
-    int result = createSocket("128.111.24.43", 21);
+    int result = connectToServer("128.111.24.43", 21);
     EXPECT_NE(-1, result);
   }
   
   TEST_F(FTPClientTest, createSocket__givenInvalidDomainName__exit1) {
-    EXPECT_EXIT(createSocket("foo", 21),
+    EXPECT_EXIT(connectToServer("foo", 21),
                 ::testing::ExitedWithCode(CANNOT_CONNECT_TO_SERVER),
                 "Cannot resolve hostname");
   }
   
   TEST_F(FTPClientTest, ftpLogin) {
-    ftpConnect(&client,"ftp.ucsb.edu", 21);
+    ftpConnect(&client);
     EXPECT_EQ(0, ftpLogin(&client));
   }
   
   TEST_F(FTPClientTest, ftpSetMode__setToBinary) {
-    ftpConnect(&client,"ftp.ucsb.edu", 21);
+    ftpConnect(&client);
     client.mode = MODE_BINARY;
     EXPECT_EQ(0, ftpSetMode(&client));
   }
   
   TEST_F(FTPClientTest, ftpSetMode__setToASCII) {
-    ftpConnect(&client,"ftp.ucsb.edu", 21);
+    ftpConnect(&client);
     client.mode = MODE_ASCII;
     EXPECT_EQ(0, ftpSetMode(&client));
   }
   
+  TEST_F(FTPClientTest, ftpSetBehaviour__setToPASV) {
+    ftpConnect(&client);
+    ftpLogin(&client);
+    client.isActive = 0;
+    EXPECT_EQ(0, ftpSetBehaviour(&client));
+  }
+  
+  TEST_F(FTPClientTest, ftpSetBehaviour__setToACTIVE) {
+    ftpConnect(&client);
+    ftpLogin(&client);
+    client.isActive = 1;
+    EXPECT_EQ(0, ftpSetBehaviour(&client));
+  }
+  
+  TEST_F(FTPClientTest, ftpSendDownloadSignal__passiveMode) {
+    ftpConnect(&client);
+    ftpLogin(&client);
+    client.isActive = 0;
+    ftpSetBehaviour(&client);
+    
+    EXPECT_EQ(0, ftpSendDownloadSignal(&client));
+  }
+  
+  TEST_F(FTPClientTest, ftpSendDownloadSignal__activeMode) {
+    ftpConnect(&client);
+    ftpLogin(&client);
+    client.isActive = 1;
+    ftpSetBehaviour(&client);
+
+    EXPECT_EQ(0, ftpSendDownloadSignal(&client));
+  }
+  
+  TEST_F(FTPClientTest, ftpReveiveData__passive_ascii_Mode) {
+    ftpConnect(&client);
+    ftpLogin(&client);
+    client.isActive = 0;
+    ftpSetBehaviour(&client);
+    client.mode = MODE_ASCII;
+    ftpSetMode(&client);
+    ftpSendDownloadSignal(&client);
+    EXPECT_EQ(0, ftpReveiveData(&client));
+  }
+  
+  TEST_F(FTPClientTest, ftpReveiveData__active_ascii_Mode) {
+    ftpConnect(&client);
+    ftpLogin(&client);
+    client.isActive = 1;
+    ftpSetBehaviour(&client);
+    client.mode = MODE_ASCII;
+    ftpSetMode(&client);
+    ftpSendDownloadSignal(&client);
+    EXPECT_EQ(0, ftpReveiveData(&client));
+  }
+  
+  TEST_F(FTPClientTest, ftpReveiveData__passive_binary_Mode) {
+    ftpConnect(&client);
+    ftpLogin(&client);
+    client.isActive = 0;
+    ftpSetBehaviour(&client);
+    client.mode = MODE_BINARY;
+    ftpSetMode(&client);
+    ftpSendDownloadSignal(&client);
+    EXPECT_EQ(0, ftpReveiveData(&client));
+  }
+  
+  TEST_F(FTPClientTest, ftpReveiveData__active_binary_Mode) {
+    ftpConnect(&client);
+    ftpLogin(&client);
+    client.isActive = 1;
+    ftpSetBehaviour(&client);
+    client.mode = MODE_BINARY;
+    ftpSetMode(&client);
+    ftpSendDownloadSignal(&client);
+    EXPECT_EQ(0, ftpReveiveData(&client));
+  }
 }  // namespace

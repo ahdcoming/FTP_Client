@@ -28,7 +28,7 @@ error_t parse_opt (int key, char *arg, struct argp_state *state) {
       exit(0);
       break;
     case 'a':
-      arguments->isAvtive = 1;
+      arguments->isActive = 1;
       break;
     case 'f':
       arguments->file = arg;

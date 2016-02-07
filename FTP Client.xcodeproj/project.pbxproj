@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2F1B6C4E1C5DEBA5000EACBE /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 2F1B6C4D1C5DEBA5000EACBE /* main.c */; };
+		2F74EEE71C672BA400A7E49D /* utilsTests.cp in Sources */ = {isa = PBXBuildFile; fileRef = 2F74EEE61C672BA400A7E49D /* utilsTests.cp */; };
 		2FD5ECCF1C5E056A001DA59E /* libargp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FD5ECCE1C5E056A001DA59E /* libargp.a */; };
 		2FD5ECD51C5EEAFA001DA59E /* argparser.c in Sources */ = {isa = PBXBuildFile; fileRef = 2FD5ECD31C5EEAFA001DA59E /* argparser.c */; };
 		2FD5ECD81C5F3C6E001DA59E /* ftpclient.c in Sources */ = {isa = PBXBuildFile; fileRef = 2FD5ECD61C5F3C6E001DA59E /* ftpclient.c */; };
@@ -44,8 +45,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2F1B6C4A1C5DEBA5000EACBE /* FTP Server */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "FTP Server"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F1B6C4A1C5DEBA5000EACBE /* mftp */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mftp; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F1B6C4D1C5DEBA5000EACBE /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		2F74EEE61C672BA400A7E49D /* utilsTests.cp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = utilsTests.cp; sourceTree = "<group>"; };
 		2FD5ECCE1C5E056A001DA59E /* libargp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libargp.a; path = "../../../../../../usr/local/Cellar/argp-standalone/1.3/lib/libargp.a"; sourceTree = "<group>"; };
 		2FD5ECD01C5E0961001DA59E /* makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = makefile; sourceTree = "<group>"; };
 		2FD5ECD31C5EEAFA001DA59E /* argparser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = argparser.c; sourceTree = "<group>"; };
@@ -98,7 +100,7 @@
 		2F1B6C4B1C5DEBA5000EACBE /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2F1B6C4A1C5DEBA5000EACBE /* FTP Server */,
+				2F1B6C4A1C5DEBA5000EACBE /* mftp */,
 				2FD5ECE11C5F4B5D001DA59E /* Tests */,
 			);
 			name = Products;
@@ -124,6 +126,7 @@
 			children = (
 				2FD5ECE31C5F4B5D001DA59E /* main.cpp */,
 				2FD5ECEE1C5F4BE8001DA59E /* ftpclientTests.cpp */,
+				2F74EEE61C672BA400A7E49D /* utilsTests.cp */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -131,9 +134,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2F1B6C491C5DEBA4000EACBE /* FTP Server */ = {
+		2F1B6C491C5DEBA4000EACBE /* mftp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2F1B6C511C5DEBA5000EACBE /* Build configuration list for PBXNativeTarget "FTP Server" */;
+			buildConfigurationList = 2F1B6C511C5DEBA5000EACBE /* Build configuration list for PBXNativeTarget "mftp" */;
 			buildPhases = (
 				2F1B6C461C5DEBA4000EACBE /* Sources */,
 				2F1B6C471C5DEBA4000EACBE /* Frameworks */,
@@ -143,9 +146,9 @@
 			);
 			dependencies = (
 			);
-			name = "FTP Server";
+			name = mftp;
 			productName = "FTP Server";
-			productReference = 2F1B6C4A1C5DEBA5000EACBE /* FTP Server */;
+			productReference = 2F1B6C4A1C5DEBA5000EACBE /* mftp */;
 			productType = "com.apple.product-type.tool";
 		};
 		2FD5ECE01C5F4B5D001DA59E /* Tests */ = {
@@ -182,7 +185,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 2F1B6C451C5DEBA4000EACBE /* Build configuration list for PBXProject "FTP Server" */;
+			buildConfigurationList = 2F1B6C451C5DEBA4000EACBE /* Build configuration list for PBXProject "FTP Client" */;
 			compatibilityVersion = "Xcode 6.3";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -194,7 +197,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				2F1B6C491C5DEBA4000EACBE /* FTP Server */,
+				2F1B6C491C5DEBA4000EACBE /* mftp */,
 				2FD5ECE01C5F4B5D001DA59E /* Tests */,
 			);
 		};
@@ -218,6 +221,7 @@
 			files = (
 				2FD5ECF31C5FD320001DA59E /* utils.c in Sources */,
 				2FD5ECE41C5F4B5D001DA59E /* main.cpp in Sources */,
+				2F74EEE71C672BA400A7E49D /* utilsTests.cp in Sources */,
 				2FD5ECEF1C5F4BE9001DA59E /* ftpclientTests.cpp in Sources */,
 				2FD5ECEB1C5F4BBF001DA59E /* argparser.c in Sources */,
 				2FD5ECED1C5F4BC7001DA59E /* ftpclient.c in Sources */,
@@ -367,7 +371,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2F1B6C451C5DEBA4000EACBE /* Build configuration list for PBXProject "FTP Server" */ = {
+		2F1B6C451C5DEBA4000EACBE /* Build configuration list for PBXProject "FTP Client" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2F1B6C4F1C5DEBA5000EACBE /* Debug */,
@@ -376,7 +380,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2F1B6C511C5DEBA5000EACBE /* Build configuration list for PBXNativeTarget "FTP Server" */ = {
+		2F1B6C511C5DEBA5000EACBE /* Build configuration list for PBXNativeTarget "mftp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2F1B6C521C5DEBA5000EACBE /* Debug */,
@@ -392,6 +396,7 @@
 				2FD5ECE71C5F4B5D001DA59E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

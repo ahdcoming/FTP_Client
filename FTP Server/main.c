@@ -10,25 +10,26 @@
 #include <stdio.h>
 #include <string.h>
 #include <argp.h>
+#include <libgen.h>
 
 #include "utils.h"
 #include "argparser.h"
 #include "ftpclient.h"
 
 
-void main (int argc, char **argv) {
+int main (int argc, char **argv) {
   struct arguments arguments;
   
   /* Default values. */
   arguments.file = NULL;
   arguments.hostname = NULL;
   arguments.user = "anonymous";
-  arguments.password = NULL;
+  arguments.password = "user@localhost.localnet";
   arguments.logfile = NULL;
   arguments.swarm_config_file = NULL;
   arguments.port = 21;
   arguments.mode = MODE_BINARY;
-  arguments.isAvtive = 0;
+  arguments.isActive = 0;
   arguments.logIsOn = 0;
   arguments.swarmIsOn = 0;
   arguments.num_bytes = 0;
@@ -43,31 +44,42 @@ void main (int argc, char **argv) {
       exit(GENERIC_ERROR);
     }
   }
+  char localFilenamem[100] = "./";
+  strcat(localFilenamem, basename(arguments.file));
   
-  FILE *localFile = fopen(arguments->file, "w");
+  FILE *localFile = fopen(localFilenamem, "w");
   FILE *logFile = NULL;
   FILE *configFile = NULL;
   
-  if (arguments->logIsOn) {
-    if (strcmp(arguments->logFile, "-")) {
+  if (arguments.logIsOn) {
+    if (strcmp(arguments.logfile, "-")) {
       logFile = stdout;
     }
     else {
-      logFile = fopen(arguments->logFile, "W");
+      logFile = fopen(arguments.logfile, "W");
     }
   }
   
-  if (arguments->swarmIsOn) {
-    configFile = fopen(arguments->swarm_config_file, "r");
+  if (arguments.swarmIsOn) {
+    configFile = fopen(arguments.swarm_config_file, "r");
     if (configFile == NULL) {
-      fprintf(stderr, "File(%s) does not exist.\n", arguments->swarm_config_file);
+      fprintf(stderr, "Config file(%s) does not exist.\n", arguments.swarm_config_file);
       exit(GENERIC_ERROR);
     }
   }
   
-  createSocket(arguments.hostname, arguments.port);
+  ftp_client ftpClient;
+  ftpClient.hostname = arguments.hostname;
+  ftpClient.user = arguments.user;
+  ftpClient.password = arguments.password;
+  ftpClient.fileName = arguments.file;
+  ftpClient.localFile = localFile;
+  ftpClient.isActive = arguments.isActive;
+  ftpClient.mode = arguments.mode;
+  ftpClient.port = arguments.port;
+  ftpDownloadFile(&ftpClient);
   
-  fclose(logFile);
+  fclose(localFile);
   fclose(logFile);
   fclose(configFile);
   exit (0);

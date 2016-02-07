@@ -15,6 +15,16 @@
 // Error codes
 #define CANNOT_CONNECT_TO_SERVER 1
 #define AUTHENTICATION_ERROR 2
+#define NOT_FOUND_ERROR 3
 #define SYNTAX_ERROR 4
+#define NOT_IMPLEMENTED_ERROR 5
+#define NOT_ALLOWED_ERROR 6
 #define GENERIC_ERROR 7
+
+void handleFTPError(char* errorMessage);
+int createListenSocket(int sockFD);
+int createConnectionSocket(char* response);
+void getIPAddrStr(int socketFD, char IPAddrStr[]);
+int acceptConnection(int listenSockFD);
+
 #endif /* utils_h */
