@@ -51,11 +51,11 @@ int main (int argc, char **argv) {
   FILE *configFile = NULL;
   
   if (arguments.logIsOn) {
-    if (strcmp(arguments.logfile, "-")) {
+    if (strcmp(arguments.logfile, "-") == 0) {
       logFile = stdout;
     }
     else {
-      logFile = fopen(arguments.logfile, "W");
+      logFile = fopen(arguments.logfile, "w");
     }
   }
   
@@ -72,6 +72,7 @@ int main (int argc, char **argv) {
   ftpClient.user = arguments.user;
   ftpClient.password = arguments.password;
   ftpClient.filePath = arguments.file;
+  ftpClient.logfile = logFile;
   ftpClient.localFilePath = localFilePath;
   ftpClient.isActive = arguments.isActive;
   ftpClient.mode = arguments.mode;

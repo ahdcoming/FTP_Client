@@ -62,6 +62,7 @@ typedef struct {
   FILE *dataSocket;
   int listenSockFD;
 
+  FILE *logfile;
   char *localFilePath;
     
   char *hostname;

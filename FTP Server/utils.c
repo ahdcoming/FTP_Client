@@ -130,4 +130,16 @@ int acceptConnection(int listenSockFD) {
   return dataSockFD;
 }
 
-#pragma mark - Others
+#pragma mark - Logging
+
+void logServer(FILE *logFile, char* message) {
+  if (logFile) {
+    fprintf(logFile, "S->C: %s", message);
+  }
+}
+
+void logClient(FILE *logFile, char* message) {
+  if (logFile) {
+    fprintf(logFile, "C->S: %s", message);
+  }
+}

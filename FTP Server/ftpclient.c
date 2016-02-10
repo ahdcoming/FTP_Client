@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdarg.h>
 
 #include <netdb.h>
 #include <sys/socket.h>
@@ -19,7 +20,22 @@
 #include "ftpclient.h"
 #include "utils.h"
 
+
 char buffer[BUFFER_SIZE];
+
+void sendMessage (ftp_client *client, const char * format, ...) {
+  va_list args;
+  va_start (args, format);
+  vsprintf (buffer,format, args);
+  va_end (args);
+  fprintf(client->socket, "%s", buffer);
+  logClient(client->logfile, buffer);
+}
+
+void receiveMessage(ftp_client *client) {
+  fgets(buffer, sizeof(buffer), client->socket);
+  logServer(client->logfile, buffer);
+}
 
 int ftpDownloadFile(ftp_client *client) {
   ftpConnect(client);
@@ -37,11 +53,11 @@ int ftpConnect(ftp_client *client) {
   client->socket = fdopen(client->socketFD, "w+");
   
   // check connection
-  fgets(buffer, sizeof(buffer), client->socket);
+  receiveMessage(client);
   
   // Delay, wait for 220
   if (strncmp(buffer, RES_DELAY, 3) == 0) {
-    fgets(buffer, sizeof(buffer), client->socket);
+    receiveMessage(client);
   }
   
   if (strncmp(buffer, RES_SERVICE_READY, 3) != 0) {
@@ -50,7 +66,7 @@ int ftpConnect(ftp_client *client) {
   
   // read all 220- messages
   while (strncmp(buffer, RES_SERVICE_READY, 4) != 0) {
-    fgets(buffer, sizeof(buffer), client->socket);
+    receiveMessage(client);
   }
   return 0;
 }
@@ -101,20 +117,20 @@ int connectToServer(const char *hostname, unsigned int port) {
 int ftpLogin(ftp_client *client) {
   
   // put username
-  fprintf(client->socket, "%s %s\r\n", FTP_USER, client->user);
+  sendMessage(client, "%s %s\r\n", FTP_USER, client->user);
   
   // check response
-  fgets(buffer, sizeof(buffer), client->socket);
+  receiveMessage(client);
   
   // not 230
   if (strncmp(buffer, RES_LOGGED_IN, 3) != 0) {
     // 331 needs password
     if (strncmp(buffer, RES_PASSWORD_REQ, 3) == 0) {
       // put password
-      fprintf(client->socket, "%s %s\r\n", FTP_PASS, client->password);
+      sendMessage(client, "%s %s\r\n", FTP_PASS, client->password);
       
       // check response
-      fgets(buffer, sizeof(buffer), client->socket);
+      receiveMessage(client);
       // not 230
       if (strncmp(buffer, RES_LOGGED_IN, 3) != 0) {
         handleFTPError(buffer);
@@ -128,7 +144,7 @@ int ftpLogin(ftp_client *client) {
 
   // read all 230- messages
   while (strncmp(buffer, RES_LOGGED_IN, 4) != 0) {
-    fgets(buffer, sizeof(buffer), client->socket);
+    receiveMessage(client);
   }
   return 0;
 }
@@ -142,13 +158,13 @@ int ftpLogin(ftp_client *client) {
  */
 int ftpSetMode(ftp_client *client) {
   if (client->mode == MODE_ASCII) {
-    fprintf(client->socket, "%s %s\r\n", FTP_TYPE, FTP_TYPE_ASCII);
+    sendMessage(client, "%s %s\r\n", FTP_TYPE, FTP_TYPE_ASCII);
   }
   else {
-    fprintf(client->socket, "%s %s\r\n", FTP_TYPE, FTP_TYPE_BINARY);
+    sendMessage(client, "%s %s\r\n", FTP_TYPE, FTP_TYPE_BINARY);
   }
   
-  fgets(buffer, sizeof(buffer), client->socket);
+  receiveMessage(client);
   if (strncmp(buffer, RES_OKAY, 3) != 0) {
     handleFTPError(buffer);
   }
@@ -169,15 +185,15 @@ int ftpSetBehaviour(ftp_client *client) {
     char IPAddrStr[30];
     getIPAddrStr(client->listenSockFD, IPAddrStr);
     
-    fprintf(client->socket, "%s %s\r\n", FTP_PORT, IPAddrStr);
-    fgets(buffer, sizeof(buffer), client->socket);
+    sendMessage(client, "%s %s\r\n", FTP_PORT, IPAddrStr);
+    receiveMessage(client);
     if (strncmp(buffer, RES_OKAY, 3) != 0) {
       handleFTPError(buffer);
     }
   }
   else {
-    fprintf(client->socket, "%s \r\n", FTP_PASV);
-    fgets(buffer, sizeof(buffer), client->socket);
+    sendMessage(client, "%s \r\n", FTP_PASV);
+    receiveMessage(client);
     if (strncmp(buffer, RES_PASV, 3) != 0) {
       handleFTPError(buffer);
     }
@@ -188,8 +204,8 @@ int ftpSetBehaviour(ftp_client *client) {
 }
 
 int ftpSendDownloadSignal(ftp_client *client) {
-  fprintf(client->socket, "%s %s\r\n", FTP_RETR, client->filePath);
-  fgets(buffer, sizeof(buffer), client->socket);
+  sendMessage(client, "%s %s\r\n", FTP_RETR, client->filePath);
+  receiveMessage(client);
   if (strncmp(buffer, RES_START, 3) != 0
       && strncmp(buffer, RES_ABOUT_TO_OPEN, 3) != 0) {
     handleFTPError(buffer);
@@ -217,7 +233,7 @@ int ftpReceiveData(ftp_client *client) {
 }
 
 int ftpConfirmCompletion(ftp_client *client) {
-  fgets(buffer, sizeof(buffer), client->socket);
+  receiveMessage(client);
   if (strncmp(buffer, RES_CLOSING_DATA_CONNECTION, 3) != 0
       && strncmp(buffer, RES_COMPLETED, 3) != 0) {
     handleFTPError(buffer);

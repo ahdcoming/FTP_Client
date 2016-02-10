@@ -27,4 +27,7 @@ int createConnectionSocket(char* response);
 void getIPAddrStr(int socketFD, char IPAddrStr[]);
 int acceptConnection(int listenSockFD);
 
+void logServer(FILE *logFile, char* message);
+void logClient(FILE *logFile, char* message);
+
 #endif /* utils_h */
