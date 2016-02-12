@@ -31,7 +31,23 @@ void logServer(FILE *logFile, char* message, int clientID);
 void logClient(FILE *logFile, char* message, int clientID);
 
 void initMutex();
+void destroyMutex();
+
 void makeLocalFilePath(char *localFilePath, char *remoteFilePath);
 size_t writeToLocalFile(const void *data, long int offset, size_t size, FILE *localFile);
+
+typedef struct Task {
+  long start;
+  long size;
+  struct Task *next;
+}Task;
+
+typedef struct TaskQueue {
+  Task *first, *last;
+}TaskQueue;
+
+void initializeQueue(TaskQueue *queue, Task *firstTask);
+void enqueue(TaskQueue *queue, Task *task);
+Task* dequeue(TaskQueue *queue);
 
 #endif /* utils_h */

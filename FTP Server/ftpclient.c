@@ -102,7 +102,7 @@ int connectToServer(const char *hostname, unsigned int port) {
 int ftpDownloadFile(ftp_client *client) {
   ftpConnect(client);
   ftpLogin(client);
-  ftpSetBehaviour(client);
+  ftpBuidlDataConnection(client);
   ftpSetMode(client);
   ftpSendDownloadSignal(client);
   if (pthread_create(&tid[0], NULL, &ftpReceiveDataWraper, client)) {
@@ -121,16 +121,21 @@ void *ftpSwarmConnection(void *clientvoid) {
   ftp_client *client = clientvoid;
   ftpConnect(client);
   ftpLogin(client);
-  ftpSetBehaviour(client);
   ftpSetMode(client);
   pthread_exit(NULL);
 }
 
 void *ftpSwarmDownloadFile(void *clientvoid) {
   ftp_client *client = clientvoid;
+  
+  
+  ftpBuidlDataConnection(client);
   ftpSetStartingPoint(client);
   ftpSendDownloadSignal(client);
   ftpReceivePartialData(client);
+  ftpStopDownload(client);
+
+  ftpTerminatePartialDownload(client);
   pthread_exit(NULL);
 }
 
@@ -237,9 +242,11 @@ int ftpSetMode(ftp_client *client) {
  *
  *  @return 0 on success, otherwise exit
  */
-int ftpSetBehaviour(ftp_client *client) {
+int ftpBuidlDataConnection(ftp_client *client) {
   if (client->isActive) {
-    client->listenSockFD = createListenSocket(client->socketFD);
+    if (client->listenSockFD < 0) {
+      client->listenSockFD = createListenSocket(client->socketFD);
+    }
     char IPAddrStr[30];
     getIPAddrStr(client->listenSockFD, IPAddrStr);
     
@@ -330,10 +337,6 @@ int ftpReceivePartialData(ftp_client *client) {
     fprintf(stderr, "Download failed for range %ld + %ld.\n", client->startByte, client->downloadSize);
     exit(GENERIC_ERROR);
   }
-  
-  ftpStopDownload(client);
-  
-  if (client->listenSockFD > 0) close(client->listenSockFD);
   return 0;
 }
 
@@ -347,11 +350,18 @@ int ftpStopDownload(ftp_client *client) {
     receiveMessage(client);
   }
   
-  if (strncmp(client->buffer, RES_CLOSING_DATA_CONNECTION, 3) != 0) {
+  if (strncmp(client->buffer, RES_CLOSING_DATA_CONNECTION, 3) != 0
+      && strncmp(client->buffer, RES_COMPLETED, 3) != 0) {
     handleFTPError(client->buffer);
   }
   
   return 0;
+}
+
+int ftpTerminatePartialDownload(ftp_client *client) {
+  if (client->listenSockFD > 0) close(client->listenSockFD);
+  close(client->socketFD);
+  return 1;
 }
 
 int ftpConfirmCompletion(ftp_client *client) {

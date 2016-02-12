@@ -156,8 +156,15 @@ void logClient(FILE *logFile, char* message, int id) {
 #pragma mark - Others
 
 void initMutex() {
-  pthread_mutex_init(&(UtilsMutex[0]), NULL);
-  pthread_mutex_init(&(UtilsMutex[1]), NULL);
+  pthread_mutex_init(&UtilsMutex[0], NULL);
+  pthread_mutex_init(&UtilsMutex[1], NULL);
+  pthread_mutex_init(&UtilsMutex[2], NULL);
+}
+
+void destroyMutex() {
+  pthread_mutex_destroy(&UtilsMutex[0]);
+  pthread_mutex_destroy(&UtilsMutex[1]);
+  pthread_mutex_destroy(&UtilsMutex[2]);
 }
 
 void makeLocalFilePath(char *localFilePath, char *remoteFilePath) {
@@ -179,4 +186,27 @@ size_t writeToLocalFile(const void *data, long int offset, size_t size, FILE *lo
   }
   pthread_mutex_unlock(&(UtilsMutex[1]));
   return writtenSize;
+}
+
+#pragma mark - Queue
+void initializeQueue(TaskQueue *queue, Task *firstTask) {
+  queue->first = firstTask;
+  queue->last = firstTask;
+}
+void enqueue(TaskQueue *queue, Task *task) {
+  pthread_mutex_lock(&(UtilsMutex[2]));
+  queue->last->next = task;
+  queue->last = task;
+  pthread_mutex_unlock(&(UtilsMutex[2]));
+}
+
+Task* dequeue(TaskQueue *queue) {
+  pthread_mutex_lock(&(UtilsMutex[2]));
+  Task* task = NULL;
+  if (queue->first != NULL) {
+    task = queue->first;
+    queue->first = queue->first->next;
+  }
+  pthread_mutex_unlock(&(UtilsMutex[2]));
+  return task;
 }

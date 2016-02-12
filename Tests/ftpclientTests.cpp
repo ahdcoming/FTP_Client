@@ -74,7 +74,7 @@ namespace {
       ftpConnect(client);
       ftpLogin(client);
       client->isActive = 0;
-      ftpSetBehaviour(client);
+      ftpBuidlDataConnection(client);
       client->mode = MODE_BINARY;
       ftpSetMode(client);
 
@@ -121,25 +121,25 @@ namespace {
 //    EXPECT_EQ(0, ftpSetMode(&client));
 //  }
 //  
-//  TEST_F(FTPClientTest, ftpSetBehaviour__setToPASV) {
+//  TEST_F(FTPClientTest, ftpBuidlDataConnection__setToPASV) {
 //    ftpConnect(&client);
 //    ftpLogin(&client);
 //    client.isActive = 0;
-//    EXPECT_EQ(0, ftpSetBehaviour(&client));
+//    EXPECT_EQ(0, ftpBuidlDataConnection(&client));
 //  }
 //  
-//  TEST_F(FTPClientTest, ftpSetBehaviour__setToACTIVE) {
+//  TEST_F(FTPClientTest, ftpBuidlDataConnection__setToACTIVE) {
 //    ftpConnect(&client);
 //    ftpLogin(&client);
 //    client.isActive = 1;
-//    EXPECT_EQ(0, ftpSetBehaviour(&client));
+//    EXPECT_EQ(0, ftpBuidlDataConnection(&client));
 //  }
 //  
 //  TEST_F(FTPClientTest, ftpSendDownloadSignal__passiveMode) {
 //    ftpConnect(&client);
 //    ftpLogin(&client);
 //    client.isActive = 0;
-//    ftpSetBehaviour(&client);
+//    ftpBuidlDataConnection(&client);
 //    
 //    EXPECT_EQ(0, ftpSendDownloadSignal(&client));
 //  }
@@ -148,7 +148,7 @@ namespace {
 //    ftpConnect(&client);
 //    ftpLogin(&client);
 //    client.isActive = 1;
-//    ftpSetBehaviour(&client);
+//    ftpBuidlDataConnection(&client);
 //
 //    EXPECT_EQ(0, ftpSendDownloadSignal(&client));
 //  }
@@ -157,7 +157,7 @@ namespace {
 //    ftpConnect(&client);
 //    ftpLogin(&client);
 //    client.isActive = 0;
-//    ftpSetBehaviour(&client);
+//    ftpBuidlDataConnection(&client);
 //    client.mode = MODE_ASCII;
 //    ftpSetMode(&client);
 //    ftpSendDownloadSignal(&client);
@@ -168,7 +168,7 @@ namespace {
 //    ftpConnect(&client);
 //    ftpLogin(&client);
 //    client.isActive = 1;
-//    ftpSetBehaviour(&client);
+//    ftpBuidlDataConnection(&client);
 //    client.mode = MODE_ASCII;
 //    ftpSetMode(&client);
 //    ftpSendDownloadSignal(&client);
@@ -179,7 +179,7 @@ namespace {
 //    ftpConnect(&client);
 //    ftpLogin(&client);
 //    client.isActive = 0;
-//    ftpSetBehaviour(&client);
+//    ftpBuidlDataConnection(&client);
 //    client.mode = MODE_BINARY;
 //    ftpSetMode(&client);
 //    ftpSendDownloadSignal(&client);
@@ -190,7 +190,7 @@ namespace {
 //    ftpConnect(&client);
 //    ftpLogin(&client);
 //    client.isActive = 1;
-//    ftpSetBehaviour(&client);
+//    ftpBuidlDataConnection(&client);
 //    client.mode = MODE_BINARY;
 //    ftpSetMode(&client);
 //    ftpSendDownloadSignal(&client);

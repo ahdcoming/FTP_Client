@@ -71,6 +71,7 @@ int main (int argc, char **argv) {
     ftpClient.isActive = arguments.isActive;
     ftpClient.mode = arguments.mode;
     ftpClient.port = arguments.port;
+    ftpClient.listenSockFD = -1;
     ftpDownloadFile(&ftpClient);
   }
   else {
@@ -100,6 +101,7 @@ int main (int argc, char **argv) {
       c->isActive = arguments.isActive;
       c->port = arguments.port;
       c->clientID = i;
+      c->listenSockFD = -1;
       if (pthread_create(&tid[i], &attr, &ftpSwarmConnection, c)) {
         fprintf(stderr, "Error creating thread\n");
         exit(GENERIC_ERROR);
@@ -129,13 +131,14 @@ int main (int argc, char **argv) {
         exit(GENERIC_ERROR);
       }
     }
-    pthread_attr_destroy(&attr);
     for (int i = 0; i < serverCount; i++) {
       if (pthread_join(tid[i], NULL)) {
         fprintf(stderr, "Error joining thread\n");
         exit(GENERIC_ERROR);
       }
     }
+    pthread_attr_destroy(&attr);
+    destroyMutex();
   }
   fclose(logFile);
   fclose(configFile);

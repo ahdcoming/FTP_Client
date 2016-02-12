@@ -98,12 +98,13 @@ int connectToServer(const char *hostname, unsigned int port);
 int ftpLogin(ftp_client *client);
 long ftpGetSize(ftp_client *client);
 int ftpSetMode(ftp_client *client);
-int ftpSetBehaviour(ftp_client *client);
+int ftpBuidlDataConnection(ftp_client *client);
 int ftpSetStartingPoint(ftp_client *client);
 int ftpSendDownloadSignal(ftp_client *client);
 int ftpReceiveData(ftp_client *client);
 int ftpReceivePartialData(ftp_client *client);
 int ftpStopDownload(ftp_client *client);
 int ftpConfirmCompletion(ftp_client *client);
+int ftpTerminatePartialDownload(ftp_client *client);
 
 #endif /* ftpclient_h */
