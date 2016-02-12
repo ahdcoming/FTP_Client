@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <libgen.h>
+#include <pthread.h>
 
 #include <arpa/inet.h>
 #include <netdb.h>
@@ -17,6 +19,8 @@
 
 #include "utils.h"
 #include "ftpclient.h"
+
+static pthread_mutex_t UtilsMutex[3];
 
 #pragma mark - Error handling
 
@@ -39,7 +43,8 @@ void handleFTPError(char* errorMessage) {
     exit(AUTHENTICATION_ERROR);
   }
   else if (strncmp(errorMessage, RES_NOT_FOUND1, 3) == 0
-           || strncmp(errorMessage, RES_NOT_FOUND2, 3) == 0) {
+           || strncmp(errorMessage, RES_NOT_FOUND2, 3) == 0
+           || strncmp(errorMessage, RES_NOT_FOUND3, 3) == 0) {
     exit(NOT_FOUND_ERROR);
   }
   else if (strncmp(errorMessage, RES_NOT_ALLOWED, 3) == 0
@@ -132,14 +137,46 @@ int acceptConnection(int listenSockFD) {
 
 #pragma mark - Logging
 
-void logServer(FILE *logFile, char* message) {
+void logServer(FILE *logFile, char* message, int id) {
   if (logFile) {
-    fprintf(logFile, "S->C: %s", message);
+    pthread_mutex_lock(&(UtilsMutex[0]));
+    fprintf(logFile, "S%d->C: %s", id, message);
+    pthread_mutex_unlock(&(UtilsMutex[0]));
   }
 }
 
-void logClient(FILE *logFile, char* message) {
+void logClient(FILE *logFile, char* message, int id) {
   if (logFile) {
-    fprintf(logFile, "C->S: %s", message);
+    pthread_mutex_lock(&(UtilsMutex[0]));
+    fprintf(logFile, "C->S%d: %s", id, message);
+    pthread_mutex_unlock(&(UtilsMutex[0]));
   }
+}
+
+#pragma mark - Others
+
+void initMutex() {
+  pthread_mutex_init(&(UtilsMutex[0]), NULL);
+  pthread_mutex_init(&(UtilsMutex[1]), NULL);
+}
+
+void makeLocalFilePath(char *localFilePath, char *remoteFilePath) {
+  strcat(localFilePath, basename(remoteFilePath));
+}
+
+size_t writeToLocalFile(const void *data, long int offset, size_t size, FILE *localFile) {
+  pthread_mutex_lock(&(UtilsMutex[1]));
+  size_t writtenSize = 0;
+  if (fseek(localFile, offset, SEEK_SET) == 0) {
+    if (ftell(localFile) != offset) {
+      printf("OH SHIT----------------------------------!!!!\n");
+      printf("file location: %ld, offset: %ld\n", ftell(localFile), offset);
+    }
+    writtenSize = fwrite(data, 1, size, localFile);
+  }
+  else {
+    exit(GENERIC_ERROR);
+  }
+  pthread_mutex_unlock(&(UtilsMutex[1]));
+  return writtenSize;
 }

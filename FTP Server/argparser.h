@@ -13,10 +13,8 @@
 
 static char *program_version = "mftp v0.1 Weimin Ouyang";
 
-/* Program documentation. */
 static char doc[] = "A FTP client implmented in C for CS176B";
 
-/* The options we understand. */
 static struct argp_option options[] = {
   {"version", 'v', 0,          OPTION_ALIAS, "Print program version"},
   {"help",    'h', 0,          0, "Give this help list"},
@@ -34,7 +32,6 @@ static struct argp_option options[] = {
   { 0 }
 };
 
-/* Used by main to communicate with parse_opt. */
 struct arguments {
   char *file;
   char *hostname;
@@ -52,7 +49,6 @@ struct arguments {
 
 error_t parse_opt (int key, char *arg, struct argp_state *state);
 
-/* Our argp parser. */
 static struct argp argp = { options, parse_opt, 0, doc };
 
 #endif /* argparser_h */

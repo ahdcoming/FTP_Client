@@ -10,16 +10,17 @@
 #include <stdio.h>
 #include <string.h>
 #include <argp.h>
-#include <libgen.h>
+#include <pthread.h>
 
 #include "utils.h"
 #include "argparser.h"
 #include "ftpclient.h"
+#include "configparser.h"
 
 
 int main (int argc, char **argv) {
   struct arguments arguments;
-  
+
   /* Default values. */
   arguments.file = NULL;
   arguments.hostname = NULL;
@@ -40,12 +41,11 @@ int main (int argc, char **argv) {
   
   if (!arguments.file || !arguments.hostname) {
     if (!arguments.swarmIsOn) {
-      fprintf(stderr, "Either --file and --server or --swarm is required.\n");
+      fprintf(stderr, "Either --file and --server, or --swarm is required.\n");
       exit(GENERIC_ERROR);
     }
   }
   char localFilePath[100] = "./";
-  strcat(localFilePath, basename(arguments.file));
   
   FILE *logFile = NULL;
   FILE *configFile = NULL;
@@ -59,26 +59,84 @@ int main (int argc, char **argv) {
     }
   }
   
-  if (arguments.swarmIsOn) {
+  if (!arguments.swarmIsOn) {
+    makeLocalFilePath(localFilePath, arguments.file);
+    ftp_client ftpClient;
+    ftpClient.hostname = arguments.hostname;
+    ftpClient.user = arguments.user;
+    ftpClient.password = arguments.password;
+    ftpClient.filePath = arguments.file;
+    ftpClient.logfile = logFile;
+    ftpClient.localFilePath = localFilePath;
+    ftpClient.isActive = arguments.isActive;
+    ftpClient.mode = arguments.mode;
+    ftpClient.port = arguments.port;
+    ftpDownloadFile(&ftpClient);
+  }
+  else {
+    initMutex();
     configFile = fopen(arguments.swarm_config_file, "r");
     if (configFile == NULL) {
       fprintf(stderr, "Config file(%s) does not exist.\n", arguments.swarm_config_file);
       exit(GENERIC_ERROR);
     }
+    struct config configs[30];
+    int serverCount = parseConfigFile(configFile, configs);
+    ftp_client clients[serverCount];
+    
+    pthread_t tid[30];
+    pthread_attr_t attr;
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+    
+    for (int i = 0; i < serverCount; i++) {
+      ftp_client *c = &clients[i];
+      c->user = configs[i].userName;
+      c->password = configs[i].passWord;
+      c->hostname = configs[i].hostName;
+      c->filePath = configs[i].filePath;
+      c->logfile = logFile;
+      c->mode = MODE_BINARY;
+      c->isActive = arguments.isActive;
+      c->port = arguments.port;
+      c->clientID = i;
+      if (pthread_create(&tid[i], &attr, &ftpSwarmConnection, c)) {
+        fprintf(stderr, "Error creating thread\n");
+        exit(GENERIC_ERROR);
+      }
+    }
+    pthread_join(tid[0], NULL);
+    long fileSize = ftpGetSize(clients);
+    long segSize = fileSize / serverCount;
+    long offset = 0;
+    makeLocalFilePath(localFilePath, configs[0].filePath);
+    FILE *sharedLocalFile = fopen(localFilePath, "wb");
+    
+    for (int i = 0; i < serverCount; i++) {
+      clients[i].sharedLocalFile = sharedLocalFile;
+      clients[i].startByte = offset;
+      clients[i].downloadSize = segSize;
+      if (i == serverCount - 1) {
+        clients[i].downloadSize = fileSize - offset;
+      }
+      offset += segSize;
+      if (i !=0 && pthread_join(tid[i], NULL)) {
+        fprintf(stderr, "Error joining thread\n");
+        exit(GENERIC_ERROR);
+      }
+      if (pthread_create(&tid[i], &attr, &ftpSwarmDownloadFile, &clients[i])) {
+        fprintf(stderr, "Error creating thread\n");
+        exit(GENERIC_ERROR);
+      }
+    }
+    pthread_attr_destroy(&attr);
+    for (int i = 0; i < serverCount; i++) {
+      if (pthread_join(tid[i], NULL)) {
+        fprintf(stderr, "Error joining thread\n");
+        exit(GENERIC_ERROR);
+      }
+    }
   }
-  
-  ftp_client ftpClient;
-  ftpClient.hostname = arguments.hostname;
-  ftpClient.user = arguments.user;
-  ftpClient.password = arguments.password;
-  ftpClient.filePath = arguments.file;
-  ftpClient.logfile = logFile;
-  ftpClient.localFilePath = localFilePath;
-  ftpClient.isActive = arguments.isActive;
-  ftpClient.mode = arguments.mode;
-  ftpClient.port = arguments.port;
-  ftpDownloadFile(&ftpClient);
-  
   fclose(logFile);
   fclose(configFile);
   exit (0);

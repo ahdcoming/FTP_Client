@@ -27,7 +27,11 @@ int createConnectionSocket(char* response);
 void getIPAddrStr(int socketFD, char IPAddrStr[]);
 int acceptConnection(int listenSockFD);
 
-void logServer(FILE *logFile, char* message);
-void logClient(FILE *logFile, char* message);
+void logServer(FILE *logFile, char* message, int clientID);
+void logClient(FILE *logFile, char* message, int clientID);
+
+void initMutex();
+void makeLocalFilePath(char *localFilePath, char *remoteFilePath);
+size_t writeToLocalFile(const void *data, long int offset, size_t size, FILE *localFile);
 
 #endif /* utils_h */
