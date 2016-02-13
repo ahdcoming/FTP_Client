@@ -19,18 +19,18 @@
 #include <pthread.h>
 
 #include "ftpclient.h"
-#include "utils.h"
 
 
 pthread_t tid[1];
 
 #pragma mark - Helpers
-void sendMessage (ftp_client *client, const char * format, ...) {
+void sendMessage(ftp_client *client, const char * format, ...) {
   va_list args;
   va_start (args, format);
   vsprintf (client->buffer,format, args);
   va_end (args);
   fprintf(client->socket, "%s", client->buffer);
+  fflush(client->socket);
   logClient(client->logfile, client->buffer, client->clientID);
 }
 
@@ -128,12 +128,21 @@ void *ftpSwarmConnection(void *clientvoid) {
 void *ftpSwarmDownloadFile(void *clientvoid) {
   ftp_client *client = clientvoid;
   
-  
-  ftpBuidlDataConnection(client);
-  ftpSetStartingPoint(client);
-  ftpSendDownloadSignal(client);
-  ftpReceivePartialData(client);
-  ftpStopDownload(client);
+  Task *task = dequeue(client->queue);
+  while (task) {
+    client->startByte = task->start;
+    client->downloadSize = task->size;
+    if (task->next == NULL) client->isLast = 1;
+    free(task);
+    
+    ftpBuidlDataConnection(client);
+    ftpSetStartingPoint(client);
+    ftpSendDownloadSignal(client);
+    ftpReceivePartialData(client);
+    ftpStopDownload(client);
+    
+    task = dequeue(client->queue);
+  }
 
   ftpTerminatePartialDownload(client);
   pthread_exit(NULL);
@@ -341,17 +350,18 @@ int ftpReceivePartialData(ftp_client *client) {
 }
 
 int ftpStopDownload(ftp_client *client) {
-  sendMessage(client, "%s \r\n", FTP_ABOR);
   close(client->dataSocketFD);
-  receiveMessage(client);
-  
-  if (strncmp(client->buffer, RES_CONNECTION_ABORTED, 3) == 0
-      || strncmp(client->buffer, RES_BROKEN_PIPE, 3) == 0) {
+  if (client->isLast != 1) {
+    sendMessage(client, "%s \r\n", FTP_ABOR);
     receiveMessage(client);
   }
+  receiveMessage(client);
   
   if (strncmp(client->buffer, RES_CLOSING_DATA_CONNECTION, 3) != 0
-      && strncmp(client->buffer, RES_COMPLETED, 3) != 0) {
+      && strncmp(client->buffer, RES_COMPLETED, 3) != 0
+      && strncmp(client->buffer, RES_CONNECTION_ABORTED, 3) != 0
+      && strncmp(client->buffer, RES_BROKEN_PIPE, 3) != 0
+      && strncmp(client->buffer, RES_NO_TRANSFER, 3) != 0) {
     handleFTPError(client->buffer);
   }
   

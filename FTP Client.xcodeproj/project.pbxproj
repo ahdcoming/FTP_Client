@@ -52,7 +52,7 @@
 		2F1B6C4D1C5DEBA5000EACBE /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		2F74EEE61C672BA400A7E49D /* utilsTests.cp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = utilsTests.cp; sourceTree = "<group>"; };
 		2FD5ECCE1C5E056A001DA59E /* libargp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libargp.a; path = "../../../../../../usr/local/Cellar/argp-standalone/1.3/lib/libargp.a"; sourceTree = "<group>"; };
-		2FD5ECD01C5E0961001DA59E /* makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = makefile; sourceTree = "<group>"; };
+		2FD5ECD01C5E0961001DA59E /* makefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; fileEncoding = 4; path = makefile; sourceTree = "<group>"; };
 		2FD5ECD31C5EEAFA001DA59E /* argparser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = argparser.c; sourceTree = "<group>"; };
 		2FD5ECD41C5EEAFA001DA59E /* argparser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = argparser.h; sourceTree = "<group>"; };
 		2FD5ECD61C5F3C6E001DA59E /* ftpclient.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ftpclient.c; sourceTree = "<group>"; };

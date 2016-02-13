@@ -10,6 +10,7 @@
 #define ftpclient_h
 
 #include <stdio.h>
+#include "utils.h"
 
 enum {
   BUFFER_SIZE = 1024
@@ -40,6 +41,7 @@ static const char RES_OKAY[] = "200 ";
 static const char RES_NOT_IMPLEMENTED1[] = "202 ";
 static const char RES_SIZE[] = "213 ";
 static const char RES_SERVICE_READY[] = "220 ";
+static const char RES_NO_TRANSFER[] = "225 ";
 static const char RES_CLOSING_DATA_CONNECTION[] = "226 ";
 static const char RES_PASV[] = "227 ";
 static const char RES_LOGGED_IN[] = "230 ";
@@ -87,6 +89,9 @@ typedef struct {
   long startByte;
   long downloadSize;
   char buffer[BUFFER_SIZE];
+  
+  TaskQueue *queue;
+  int isLast;
 } ftp_client;
 
 int ftpDownloadFile(ftp_client *client);

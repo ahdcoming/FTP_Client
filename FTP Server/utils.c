@@ -189,15 +189,59 @@ size_t writeToLocalFile(const void *data, long int offset, size_t size, FILE *lo
 }
 
 #pragma mark - Queue
-void initializeQueue(TaskQueue *queue, Task *firstTask) {
+
+void initializeQueue(TaskQueue *queue, long fileSize, int serverCount) {
+  
+  Task *firstTask = (Task*)malloc(sizeof(Task));
+  long segSize = fileSize / serverCount;
+  long offset = 0;
+
   queue->first = firstTask;
   queue->last = firstTask;
+  
+  for (int i = 0; i < serverCount; i++) {
+    Task *task;
+    if (i != 0) {
+      task = (Task*)malloc(sizeof(Task));
+    }
+    else {
+      task = firstTask;
+    }
+    task->start = offset;
+    task->size = segSize;
+    if (i == serverCount - 1) {
+      task->size = fileSize - offset;
+    }
+    offset += segSize;
+    enqueue(queue, task);
+  }
 }
+
+void initializeQueueB(TaskQueue *queue, long fileSize, long segSize) {
+  
+  Task *firstTask = (Task*)malloc(sizeof(Task));
+  
+  queue->first = firstTask;
+  queue->last = firstTask;
+  
+  for (long offset = 0; offset < fileSize; offset += segSize) {
+    Task *task;
+    if (offset != 0) {
+      task = (Task*)malloc(sizeof(Task));
+    }
+    else {
+      task = firstTask;
+    }
+    task->start = offset;
+    task->size = segSize < fileSize - offset ? segSize : fileSize - offset;
+    enqueue(queue, task);
+  }
+}
+
 void enqueue(TaskQueue *queue, Task *task) {
-  pthread_mutex_lock(&(UtilsMutex[2]));
   queue->last->next = task;
   queue->last = task;
-  pthread_mutex_unlock(&(UtilsMutex[2]));
+  task->next = NULL;
 }
 
 Task* dequeue(TaskQueue *queue) {

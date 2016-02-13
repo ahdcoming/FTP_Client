@@ -1,23 +1,17 @@
-CFLAGS=-Wall -c
+CC=clang
+CFLAGS=-Wall -c -std=gnu99 -Wno-unknown-pragmas -Wno-unused-variable
+LDFLAGS=-l pthread -largp
+SOURCES=main.c utils.c argparser.c configparser.c ftpclient.c
+OBJECTS=$(SOURCES:.c=.o)
+EXECUTABLE=mftp
 
-all: mftp test_arges
+all: $(SOURCES) $(EXECUTABLE)
 
-test_args: mftp
-	./mftp -a -f file -s hostname -p 22 -n user -P password -m ASCII -l logfile -w config -b 20
+$(EXECUTABLE): $(OBJECTS)
+	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
 
-
-mftp: main.o argparser.o
-	gcc -o mftp -l argp main.o argparser.o
-
-main.o: main.c utils.h argparser.h
-	gcc $(CFLAGS) main.c
-
-argparser.o: argparser.c utils.h argparser.h
-	gcc $(CFLAGS) argparser.c
-
-ftpclient.o: ftpclient.c utils.h ftpclient.h
-	gcc $(CFLAGS) ftpclient.c
+.c.o:
+	$(CC) $(CFLAGS) $< -o $@
 
 clean:
-	rm mftp *.o
-
+	rm *.o mftp

@@ -16,7 +16,7 @@ static char *program_version = "mftp v0.1 Weimin Ouyang";
 static char doc[] = "A FTP client implmented in C for CS176B";
 
 static struct argp_option options[] = {
-  {"version", 'v', 0,          OPTION_ALIAS, "Print program version"},
+  {"version", 'v', 0,          0, "Print program version"},
   {"help",    'h', 0,          0, "Give this help list"},
   {"active",  'a', 0,          0, "Forces active behavior (the server opens the data connection to the client) (default behavior: passive behavior)"},
   {"file",    'f', "file",     0, "Specifies the file to download" },

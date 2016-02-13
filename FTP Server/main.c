@@ -102,6 +102,7 @@ int main (int argc, char **argv) {
       c->port = arguments.port;
       c->clientID = i;
       c->listenSockFD = -1;
+      c->isLast = 0;
       if (pthread_create(&tid[i], &attr, &ftpSwarmConnection, c)) {
         fprintf(stderr, "Error creating thread\n");
         exit(GENERIC_ERROR);
@@ -109,19 +110,20 @@ int main (int argc, char **argv) {
     }
     pthread_join(tid[0], NULL);
     long fileSize = ftpGetSize(clients);
-    long segSize = fileSize / serverCount;
-    long offset = 0;
     makeLocalFilePath(localFilePath, configs[0].filePath);
     FILE *sharedLocalFile = fopen(localFilePath, "wb");
     
+    TaskQueue queue;
+    if (arguments.num_bytes == 0) {
+      initializeQueue(&queue, fileSize, serverCount);
+    }
+    else {
+      initializeQueueB(&queue, fileSize, arguments.num_bytes);
+    }
+    
     for (int i = 0; i < serverCount; i++) {
       clients[i].sharedLocalFile = sharedLocalFile;
-      clients[i].startByte = offset;
-      clients[i].downloadSize = segSize;
-      if (i == serverCount - 1) {
-        clients[i].downloadSize = fileSize - offset;
-      }
-      offset += segSize;
+      clients[i].queue = &queue;
       if (i !=0 && pthread_join(tid[i], NULL)) {
         fprintf(stderr, "Error joining thread\n");
         exit(GENERIC_ERROR);
@@ -139,9 +141,10 @@ int main (int argc, char **argv) {
     }
     pthread_attr_destroy(&attr);
     destroyMutex();
+    fclose(sharedLocalFile);
   }
-  fclose(logFile);
-  fclose(configFile);
-  exit (0);
+  if (logFile) fclose(logFile);
+  if (configFile) fclose(configFile);
+  pthread_exit(NULL);
 }
 

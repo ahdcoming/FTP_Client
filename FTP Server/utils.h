@@ -46,7 +46,8 @@ typedef struct TaskQueue {
   Task *first, *last;
 }TaskQueue;
 
-void initializeQueue(TaskQueue *queue, Task *firstTask);
+void initializeQueue(TaskQueue *queue, long fileSize, int serverCount);
+void initializeQueueB(TaskQueue *queue, long fileSize, long segSize);
 void enqueue(TaskQueue *queue, Task *task);
 Task* dequeue(TaskQueue *queue);
 
