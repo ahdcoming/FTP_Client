@@ -1,3 +1,20 @@
+### Basic Architecture
+`argparser`: An argument parser based on `argp.h`.
+`configparser`: A parser that parses config file for swarming mode.
+`cftpclient`: The core of `mftp`. It interacts with FTP servers.
+`main`: The main logic of the program.
+`utils`: Some utility functions used in the program.
+
+### Build
+Simply run `make`. The makefile is included.
+
+### Known Issues
+#### Error 450
+When the network speed is fast enough, and -b is specified with relative small numbers (less than 5MB on a 100 Mbit/s network, larger on faster networks), the error will be return from the server, indicating the file is busy. It's likely because the server was not able to handle rapid file access like this. If 450 happens (or `mftp` exits with random status), try to set num_bytes a larger number to have `mftp` requested to server less frequently.
+
+#### Failure
+If any of the servers specified in configure file fails to finish transmission, the whole download process will be aborted. Although there might be a downloaded file, it is likely corrupted.  
+
 ### Benchmark
 #### Single server
 ##### ftp.ucsb.edu
@@ -10,8 +27,8 @@ sys	  0m0.432s
 tyler@tylerRMBP:Debug $ md5 ls-lR.gz
 MD5 (ls-lR.gz) = b7a08dc0d164d5233e257854808d9416
 ```
-##### pogo
 
+##### pogo
 ```
 tyler@tylerRMBP:Debug $ time ./mftp -s 192.168.1.102 -f /ls-lR.gz
 
@@ -117,6 +134,3 @@ sys	  0m0.438s
 tyler@tylerRMBP:Debug $ md5 ls-lR.gz
 MD5 (ls-lR.gz) = b7a08dc0d164d5233e257854808d9416
 ```
-### Known Issues
-#### Error 450
-When the network speed is fast enough, and -b is specified with relative small numbers (less than 5MB on a Megabits network), the error will be return from the server, indicating the file is busy. It's likely because the server was not able to handle rapid file access like this. If 450 happens, or mftp exits with error code 3 and some random error message, try to set num_bytes a larger number to have mftp requested from server less frequently.

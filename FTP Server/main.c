@@ -72,6 +72,7 @@ int main (int argc, char **argv) {
     ftpClient.mode = arguments.mode;
     ftpClient.port = arguments.port;
     ftpClient.listenSockFD = -1;
+    ftpClient.clientID = 0;
     ftpDownloadFile(&ftpClient);
   }
   else {
@@ -145,6 +146,6 @@ int main (int argc, char **argv) {
   }
   if (logFile) fclose(logFile);
   if (configFile) fclose(configFile);
-  pthread_exit(NULL);
+  exit(0);
 }
 
